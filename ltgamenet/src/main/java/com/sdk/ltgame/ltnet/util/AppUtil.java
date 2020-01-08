@@ -65,7 +65,7 @@ public class AppUtil {
     public static String getLocation() {
         String local = "";
         try {
-            local = Locale.getDefault().getDisplayCountry();
+            local = Locale.getDefault().getCountry();
             return local;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -79,7 +79,7 @@ public class AppUtil {
     public static String getLanguage() {
         String location = "";
         try {
-            location = Locale.getDefault().getDisplayLanguage();
+            location = Locale.getDefault().getLanguage();
             return location;
         } catch (Exception ex) {
             ex.printStackTrace();
