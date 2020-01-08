@@ -2,6 +2,7 @@ package com.sdk.ltgame.ltnet.manager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.gentop.ltgame.ltgamesdkcore.util.FileUtil;
@@ -58,7 +59,7 @@ public class LoginRealizeManager {
             map.put("platform", 2);
             map.put("adid", options.getAdID());
             map.put("gps_adid", options.getAdID());
-            map.put("platform_id",AppUtil.getPackageName(context));
+            map.put("platform_id", AppUtil.getPackageName(context));
             String baseUrl = "";
             if (options.getISServerTest()) {
                 baseUrl = Api.TEST_SERVER_URL;
@@ -81,16 +82,12 @@ public class LoginRealizeManager {
                             if (result != null) {
                                 if (result.getCode() == 200) {
                                     if (mListener != null) {
-                                        int code = 0;
-                                        BaseEntry<ResultModel> baseEntry = new BaseEntry<>();
-                                        baseEntry.setResult(result.getResult());
+                                        mListener.onState((Activity) context, LoginResult.successOf(result));
                                         if (result.getData().getLt_type().equals("register")) {
-                                            code = Constants.USER_REGISTER_GOOGLE_CODE;
+                                            Intent intent = new Intent(Constants.GOOGLE_LOGIN_CODE);
+                                            context.sendBroadcast(intent);
                                         }
-                                        baseEntry.setCode(code);
-                                        baseEntry.setData(result.getData());
-                                        baseEntry.setMsg(result.getMsg());
-                                        mListener.onState((Activity) context, LoginResult.successOf(baseEntry));
+
                                     }
                                     if (!TextUtils.isEmpty(result.getData().getApi_token())) {
                                         PreferencesUtils.putString(context, Constants.USER_API_TOKEN,
@@ -174,16 +171,11 @@ public class LoginRealizeManager {
                             if (result != null) {
                                 if (result.getCode() == 200) {
                                     if (mListener != null) {
-                                        int code = 0;
-                                        BaseEntry<ResultModel> baseEntry = new BaseEntry<>();
-                                        baseEntry.setResult(result.getResult());
+                                        mListener.onState((Activity) context, LoginResult.successOf(result));
                                         if (result.getData().getLt_type().equals("register")) {
-                                            code = Constants.USER_REGISTER_FACEBOOK_CODE;
+                                            Intent intent = new Intent(Constants.FB_LOGIN_CODE);
+                                            context.sendBroadcast(intent);
                                         }
-                                        baseEntry.setCode(code);
-                                        baseEntry.setData(result.getData());
-                                        baseEntry.setMsg(result.getMsg());
-                                        mListener.onState((Activity) context, LoginResult.successOf(baseEntry));
                                     }
                                     if (!TextUtils.isEmpty(result.getData().getApi_token())) {
                                         PreferencesUtils.putString(context, Constants.USER_API_TOKEN,
@@ -431,7 +423,7 @@ public class LoginRealizeManager {
      */
     public static void autoLoginCheck(Context context, String mLtAppID,
                                       String mLtAppKey, String mLtUid, String mLTUidToken,
-                                       final OnAutoCheckLoginListener mListener) {
+                                      final OnAutoCheckLoginListener mListener) {
         LTGameOptions options = LTGameSdk.options();
         String baseUrl = "";
         if (!TextUtils.isEmpty(mLtUid) &&
@@ -808,7 +800,7 @@ public class LoginRealizeManager {
             map.put("adid", adid);
             map.put("platform", 2);
             map.put("gps_adid", options.getAdID());
-            map.put("platform_id",AppUtil.getPackageName(context));
+            map.put("platform_id", AppUtil.getPackageName(context));
 
             String baseUrl = "";
             if (options.getISServerTest()) {
@@ -1110,16 +1102,11 @@ public class LoginRealizeManager {
                                 if (result.getCode() == 200) {
                                     if (result.getData() != null) {
                                         if (mListener != null) {
-                                            int code = 0;
-                                            BaseEntry<ResultModel> baseEntry = new BaseEntry<>();
-                                            baseEntry.setResult(result.getResult());
+                                            mListener.onState((Activity) context, LoginResult.successOf(result));
                                             if (result.getData().getLt_type().equals("register")) {
-                                                code = Constants.USER_REGISTER_GUEST_CODE;
+                                                Intent intent = new Intent(Constants.GUEST_LOGIN_CODE);
+                                                context.sendBroadcast(intent);
                                             }
-                                            baseEntry.setCode(code);
-                                            baseEntry.setData(result.getData());
-                                            baseEntry.setMsg(result.getMsg());
-                                            mListener.onState((Activity) context, LoginResult.successOf(baseEntry));
                                         }
                                         if (!TextUtils.isEmpty(result.getData().getApi_token())) {
                                             PreferencesUtils.putString(context, Constants.USER_API_TOKEN,
