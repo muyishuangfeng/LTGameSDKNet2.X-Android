@@ -46,7 +46,7 @@ public class LoginRealizeManager {
      * @param idToken   google返回的Token
      * @param mListener 接口回调
      */
-    public static void googleLogin(final Context context, String idToken,
+    public static void googleLogin(final Context context, String idToken, final boolean isStats,
                                    final OnLoginStateListener mListener) {
         LTGameOptions options = LTGameSdk.options();
         if (!TextUtils.isEmpty(options.getLtAppId()) &&
@@ -84,8 +84,11 @@ public class LoginRealizeManager {
                                     if (mListener != null) {
                                         mListener.onState((Activity) context, LoginResult.successOf(result));
                                         if (result.getData().getLt_type().equals("register")) {
-                                            Intent intent = new Intent(Constants.GOOGLE_LOGIN_CODE);
-                                            context.sendBroadcast(intent);
+                                            if (isStats) {
+                                                Intent intent = new Intent(Constants.GOOGLE_LOGIN_CODE);
+                                                context.sendBroadcast(intent);
+                                            }
+
                                         }
 
                                     }
@@ -134,7 +137,7 @@ public class LoginRealizeManager {
      * @param accessToken facebook返回的Token
      * @param mListener   接口回调
      */
-    public static void facebookLogin(final Context context, String accessToken,
+    public static void facebookLogin(final Context context, String accessToken, final boolean isStats,
                                      final OnLoginStateListener mListener) {
         LTGameOptions options = LTGameSdk.options();
         if (!TextUtils.isEmpty(options.getLtAppId()) &&
@@ -173,8 +176,10 @@ public class LoginRealizeManager {
                                     if (mListener != null) {
                                         mListener.onState((Activity) context, LoginResult.successOf(result));
                                         if (result.getData().getLt_type().equals("register")) {
-                                            Intent intent = new Intent(Constants.FB_LOGIN_CODE);
-                                            context.sendBroadcast(intent);
+                                            if (isStats) {
+                                                Intent intent = new Intent(Constants.FB_LOGIN_CODE);
+                                                context.sendBroadcast(intent);
+                                            }
                                         }
                                     }
                                     if (!TextUtils.isEmpty(result.getData().getApi_token())) {
@@ -1066,7 +1071,7 @@ public class LoginRealizeManager {
     /**
      * 游客登录验证
      */
-    public static void guestLogin(final Context context, final OnLoginStateListener mListener) {
+    public static void guestLogin(final Context context, final boolean isStats, final OnLoginStateListener mListener) {
         String baseUrl = "";
         LTGameOptions options = LTGameSdk.options();
         if (!TextUtils.isEmpty(options.getLtAppId()) &&
@@ -1104,8 +1109,10 @@ public class LoginRealizeManager {
                                         if (mListener != null) {
                                             mListener.onState((Activity) context, LoginResult.successOf(result));
                                             if (result.getData().getLt_type().equals("register")) {
-                                                Intent intent = new Intent(Constants.GUEST_LOGIN_CODE);
-                                                context.sendBroadcast(intent);
+                                                if (isStats) {
+                                                    Intent intent = new Intent(Constants.GUEST_LOGIN_CODE);
+                                                    context.sendBroadcast(intent);
+                                                }
                                             }
                                         }
                                         if (!TextUtils.isEmpty(result.getData().getApi_token())) {
