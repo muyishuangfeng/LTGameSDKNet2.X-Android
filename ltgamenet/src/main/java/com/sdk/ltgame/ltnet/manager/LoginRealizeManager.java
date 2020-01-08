@@ -46,7 +46,7 @@ public class LoginRealizeManager {
      * @param idToken   google返回的Token
      * @param mListener 接口回调
      */
-    public static void googleLogin(final Context context, String idToken, final boolean isStats,
+    public static void googleLogin(final Context context, String idToken,
                                    final OnLoginStateListener mListener) {
         LTGameOptions options = LTGameSdk.options();
         if (!TextUtils.isEmpty(options.getLtAppId()) &&
@@ -82,15 +82,18 @@ public class LoginRealizeManager {
                             if (result != null) {
                                 if (result.getCode() == 200) {
                                     if (mListener != null) {
-                                        mListener.onState((Activity) context, LoginResult.successOf(result));
+                                        int code = 0;
+                                        BaseEntry<ResultModel> baseEntry = new BaseEntry<>();
+                                        baseEntry.setResult(result.getResult());
                                         if (result.getData().getLt_type().equals("register")) {
-                                            if (isStats) {
-                                                Intent intent = new Intent(Constants.GOOGLE_LOGIN_CODE);
-                                                context.sendBroadcast(intent);
-                                            }
-
+                                            code = Constants.USER_REGISTER_GOOGLE_CODE;
                                         }
-
+                                        baseEntry.setCode(code);
+                                        baseEntry.setData(result.getData());
+                                        baseEntry.setMsg(result.getMsg());
+                                        mListener.onState((Activity) context, LoginResult.successOf(baseEntry));
+                                        Intent intent = new Intent(Constants.GOOGLE_LOGIN_CODE);
+                                        context.sendBroadcast(intent);
                                     }
                                     if (!TextUtils.isEmpty(result.getData().getApi_token())) {
                                         PreferencesUtils.putString(context, Constants.USER_API_TOKEN,
@@ -104,6 +107,8 @@ public class LoginRealizeManager {
                                         PreferencesUtils.putString(context, Constants.USER_LT_UID_TOKEN,
                                                 result.getData().getLt_uid_token());
                                     }
+
+
                                 } else {
                                     if (mListener != null) {
                                         mListener.onState((Activity) context,
@@ -137,7 +142,7 @@ public class LoginRealizeManager {
      * @param accessToken facebook返回的Token
      * @param mListener   接口回调
      */
-    public static void facebookLogin(final Context context, String accessToken, final boolean isStats,
+    public static void facebookLogin(final Context context, String accessToken,
                                      final OnLoginStateListener mListener) {
         LTGameOptions options = LTGameSdk.options();
         if (!TextUtils.isEmpty(options.getLtAppId()) &&
@@ -174,13 +179,18 @@ public class LoginRealizeManager {
                             if (result != null) {
                                 if (result.getCode() == 200) {
                                     if (mListener != null) {
-                                        mListener.onState((Activity) context, LoginResult.successOf(result));
+                                        int code = 0;
+                                        BaseEntry<ResultModel> baseEntry = new BaseEntry<>();
+                                        baseEntry.setResult(result.getResult());
                                         if (result.getData().getLt_type().equals("register")) {
-                                            if (isStats) {
-                                                Intent intent = new Intent(Constants.FB_LOGIN_CODE);
-                                                context.sendBroadcast(intent);
-                                            }
+                                            code = Constants.USER_REGISTER_FACEBOOK_CODE;
                                         }
+                                        baseEntry.setCode(code);
+                                        baseEntry.setData(result.getData());
+                                        baseEntry.setMsg(result.getMsg());
+                                        mListener.onState((Activity) context, LoginResult.successOf(baseEntry));
+                                        Intent intent = new Intent(Constants.FB_LOGIN_CODE);
+                                        context.sendBroadcast(intent);
                                     }
                                     if (!TextUtils.isEmpty(result.getData().getApi_token())) {
                                         PreferencesUtils.putString(context, Constants.USER_API_TOKEN,
@@ -194,6 +204,8 @@ public class LoginRealizeManager {
                                         PreferencesUtils.putString(context, Constants.USER_LT_UID_TOKEN,
                                                 result.getData().getLt_uid_token());
                                     }
+
+
                                 } else {
                                     if (mListener != null) {
                                         mListener.onState((Activity) context,
@@ -1071,7 +1083,7 @@ public class LoginRealizeManager {
     /**
      * 游客登录验证
      */
-    public static void guestLogin(final Context context, final boolean isStats, final OnLoginStateListener mListener) {
+    public static void guestLogin(final Context context, final OnLoginStateListener mListener) {
         String baseUrl = "";
         LTGameOptions options = LTGameSdk.options();
         if (!TextUtils.isEmpty(options.getLtAppId()) &&
@@ -1107,13 +1119,18 @@ public class LoginRealizeManager {
                                 if (result.getCode() == 200) {
                                     if (result.getData() != null) {
                                         if (mListener != null) {
-                                            mListener.onState((Activity) context, LoginResult.successOf(result));
+                                            int code = 0;
+                                            BaseEntry<ResultModel> baseEntry = new BaseEntry<>();
+                                            baseEntry.setResult(result.getResult());
                                             if (result.getData().getLt_type().equals("register")) {
-                                                if (isStats) {
-                                                    Intent intent = new Intent(Constants.GUEST_LOGIN_CODE);
-                                                    context.sendBroadcast(intent);
-                                                }
+                                                code = Constants.USER_REGISTER_GUEST_CODE;
                                             }
+                                            baseEntry.setCode(code);
+                                            baseEntry.setData(result.getData());
+                                            baseEntry.setMsg(result.getMsg());
+                                            mListener.onState((Activity) context, LoginResult.successOf(baseEntry));
+                                            Intent intent = new Intent(Constants.GUEST_LOGIN_CODE);
+                                            context.sendBroadcast(intent);
                                         }
                                         if (!TextUtils.isEmpty(result.getData().getApi_token())) {
                                             PreferencesUtils.putString(context, Constants.USER_API_TOKEN,
@@ -1127,7 +1144,9 @@ public class LoginRealizeManager {
                                             PreferencesUtils.putString(context, Constants.USER_LT_UID_TOKEN,
                                                     result.getData().getLt_uid_token());
                                         }
+
                                     }
+
 
                                 } else {
                                     if (mListener != null) {
@@ -1250,7 +1269,6 @@ public class LoginRealizeManager {
      * 解绑账户
      */
     public static void unBindAccount(final Context context, final OnLoginStateListener mListener) {
-
         LTGameOptions options = LTGameSdk.options();
         if (!TextUtils.isEmpty(options.getLtAppId()) &&
                 !TextUtils.isEmpty(options.getLtAppKey()) &&
